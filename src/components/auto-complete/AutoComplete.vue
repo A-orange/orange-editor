@@ -167,6 +167,8 @@ export default defineComponent({
 
 .orange-auto-complete-popper {
   background-color: @auto-complete-popper !important;
+  opacity: 1 !important;
+  margin-top: -10px !important;
   
   > .el-autocomplete-suggestion > .el-scrollbar > .el-autocomplete-suggestion__wrap > .el-autocomplete-suggestion__list {
     padding: 0 6px !important;
