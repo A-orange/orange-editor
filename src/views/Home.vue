@@ -17,7 +17,10 @@
             </el-breadcrumb-item>
           </el-breadcrumb>
         </el-header>
-        <el-main>Main</el-main>
+        <el-main>
+          <auto-complete @createControl="createControl"/>
+          <code-editor/>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -26,6 +29,9 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {intersection} from 'lodash'
+
+import AutoComplete from "@/components/auto-complete/AutoComplete.vue";
+import CodeEditor from "@/components/code-editor/CodeEditor.vue";
 
 // 侧边栏展示隐藏
 import {keyDownCode, keyDownListener} from "@/event/keyEvent";
@@ -51,7 +57,10 @@ type Breadcrumb = {
 }
 const breadcrumb = ref<Array<Breadcrumb>>([{path: '/', name: '工作台'}]);
 
-
+// 生成控件
+const createControl = ({control, config}: any) => {
+  console.log(control, config)
+}
 
 </script>
 
@@ -81,7 +90,7 @@ const breadcrumb = ref<Array<Breadcrumb>>([{path: '/', name: '工作台'}]);
       }
       
       > .el-main {
-        padding: 0;
+        padding: 10px;
       }
     }
   }
