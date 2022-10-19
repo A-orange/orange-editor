@@ -13,12 +13,7 @@
           >{{ idx }}
           </div>
         </div>
-        <div
-            class="code-view"
-            contenteditable="true"
-            :style="codeEditorStyle"
-            @input="codeEditor.html=$event.target.innerHTML"
-        ></div>
+        <Editor v-model:value="codeEditor.html" class="code-view" :style="codeEditorStyle"/>
       </div>
     </el-scrollbar>
   </div>
@@ -27,6 +22,9 @@
 <script setup lang="ts">
 import {computed, reactive, ref, watch} from "vue";
 import {editorFonts} from "./fonts/font";
+import Editor from "./Editor.vue";
+import highlight from "highlight.js";
+
 const codeEditor = reactive({
   fontSize: 14,
   showLineNumber: true,
@@ -34,7 +32,7 @@ const codeEditor = reactive({
   wordBreak: true, // 换行
   ligatures: true, // 连字
   fontFamily: 'JetBrains Mono ExtraLight', // 默认字体
-  html: ''
+  html: ``
 })
 // 行号样式
 const lineNumberStyle = computed(() => {
@@ -57,8 +55,11 @@ const codeEditorStyle = computed(() => {
 watch(
     () => codeEditor.html,
     (html) => {
-      // const reg = /<div( class=".*?")?>(.*?)<\/div>/gm;
-      console.log(html)
+      const obj = highlight.highlight(html, {
+        language: 'js'
+      })
+      console.log(obj.value)
+      // codeEditor.html = obj.value;
     }
 )
 
@@ -124,6 +125,7 @@ export default defineComponent({
     }
 
     > .code-view {
+      height: auto;
       flex-shrink: 1;
       flex-grow: 1;
 
