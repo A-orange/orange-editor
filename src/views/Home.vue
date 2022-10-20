@@ -19,7 +19,12 @@
         </el-header>
         <el-main>
           <auto-complete @createControl="createControl"/>
-          <code-editor/>
+          <title-control v-model:value="titleControlText" :level="1"/>
+          <title-control v-model:value="titleControlText" :level="2"/>
+          <title-control v-model:value="titleControlText" :level="3"/>
+          <title-control v-model:value="titleControlText" :level="4"/>
+          <todo-control v-model:value="todo.finish" :task="todo.task"/>
+          <code-editor config="{}"/>
         </el-main>
       </el-container>
     </el-container>
@@ -27,11 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {intersection} from 'lodash'
 
 import AutoComplete from "@/components/auto-complete/AutoComplete.vue";
 import CodeEditor from "@/components/code-editor/CodeEditor.vue";
+import TitleControl from "@/components/title/Title.vue";
+import TodoControl from "@/components/todo/Todo.vue";
 
 // 侧边栏展示隐藏
 import {keyDownCode, keyDownListener} from "@/event/keyEvent";
@@ -59,9 +66,14 @@ const breadcrumb = ref<Array<Breadcrumb>>([{path: '/', name: '工作台'}]);
 
 // 生成控件
 const createControl = ({control, config}: any) => {
-  console.log(control, config)
+  viewLayout.value.push({key: Date.now(), component: CodeEditor, options: {language: config.codeType}})
 }
-
+const viewLayout = ref<any>([]);
+const titleControlText = ref()
+const todo = reactive({
+  finish: false,
+  task: '任务'
+})
 </script>
 
 <style lang="less" scoped>

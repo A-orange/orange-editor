@@ -28,8 +28,8 @@
             </icon>
           </span>
           <!-- 行号 -->
-          <span class="header-tip" @click="codeEditor.showLineNumber = !codeEditor.showLineNumber">
-            <icon :size="14" :color="codeEditor.showLineNumber? '#c2c2c2': '#333333'">
+          <span class="header-tip" @click="codeEditor.showNo = !codeEditor.showNo">
+            <icon :size="14" :color="codeEditor.showNo? '#c2c2c2': '#333333'">
               <template v-slot>
                 <svg style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024"
                      version="1.1" xmlns="http://www.w3.org/2000/svg"><path
@@ -59,7 +59,7 @@
             </icon>
           </span>
         </div>
-        <div v-if="codeEditor.showLineNumber" class="line-number">
+        <div v-if="codeEditor.showNo" class="line-number">
           <div
             class="number"
             :style="lineNumberStyle"
@@ -82,25 +82,43 @@
 </template>
 
 <script setup lang="ts">
-import {computed, reactive, ref, watch} from "vue";
+import {computed, defineProps, reactive, ref, watch} from "vue";
 import {editorFonts} from "./themes/fonts/font";
 // @ts-ignore
 import {Prism} from "./prism.js";
 import DropMenu from "@/components/DropMenu/DropMenu.vue";
 import Icon from "@/components/Icon/Icon.vue";
 
+const props = defineProps({
+  value: {
+    type: String,
+    default: ""
+  },
+  config: {
+    type: Object,
+    required: true,
+    default: {
+      showNo: true,
+      language: 'json',
+      wordBreak: true,
+      fontFamily: 'JetBrains Mono ExtraLight'
+    }
+  }
+})
+
+const emits = defineEmits(['update:value', 'update:config'])
+
 const codeEditorRef = ref();
 // 文本编辑器 属性
 const codeEditor = reactive({
   fontSize: 14,
-  showLineNumber: true,
-  language: 'js',
-  wordBreak: true, // 换行
-  ligatures: true, // 连字
+  showNo: props.config?.showNo || true,
+  language: props.config?.language || 'json',
+  wordBreak: props.config?.wordBreak || true, // 换行
   lock: false, // 锁
-  fontFamily: 'JetBrains Mono ExtraLight', // 默认字体
+  fontFamily: props.config?.fontFamily || 'JetBrains Mono ExtraLight', // 默认字体
   html: '',
-  code: ''
+  code: props.value
 })
 const codeFamily = editorFonts.map(font => {
   return {
@@ -151,18 +169,31 @@ const editorBlur = (event: any) => {
 
 // 代码文本更改 重新生成 html
 watch(
-  () => codeEditor.code,
-  (code) => {
+  () => [codeEditor.code, codeEditor.language],
+  () => {
     const language = codeEditor.language;
     if (language) {
       codeEditor.html = Prism.highlight(
-        code,
+        codeEditor.code,
         Prism.languages[language],
         language
       );
     }
+    emits('update:value', codeEditor.code);
   },
   {immediate: true}
+)
+
+watch(
+  () => [codeEditor.showNo , codeEditor.language, codeEditor.wordBreak, codeEditor.fontFamily],
+  () => {
+    emits('update:config', {
+      showNo: codeEditor.showNo,
+      language: codeEditor.language,
+      wordBreak: codeEditor.wordBreak,
+      fontFamily: codeEditor.fontFamily
+    })
+  }
 )
 
 // copy 源码
