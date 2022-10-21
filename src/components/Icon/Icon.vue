@@ -11,7 +11,14 @@ const props = defineProps({
     type: Number,
     default: 14
   },
-  color: String
+  color: {
+    type: String,
+    default: 'currentcolor'
+  },
+  rule: {
+    type: String,
+    default: 'nonzero'
+  }
 })
 
 const iconRef = ref<HTMLElement>();
@@ -33,7 +40,8 @@ const redraw = () => {
     svg.style.height = props.size + 'px';
     svg.style.verticalAlign = 'middle';
     svg.style.overflow = 'hidden';
-    svg.style.fill = props.color ? props.color : 'currentcolor';
+    svg.style.fillRule = props.rule;
+    svg.style.fill = props.color;
   }
 }
 </script>

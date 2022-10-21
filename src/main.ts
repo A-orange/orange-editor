@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
 
 // 样式
 import "@/styles/normal.css"
@@ -19,6 +18,12 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.use(ElementPlus);
 
-app.use(router)
+// 路由
+import router from './router'
+app.use(router);
+
+// vuex
+import {store} from "@/store";
+app.use(store);
 
 app.mount('#app')
