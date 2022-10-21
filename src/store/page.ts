@@ -74,6 +74,13 @@ export const page = {
           wordBreak: true,
           fontFamily: 'JetBrains Mono ExtraLight'
         }
+      },
+      // 无序列表
+      {
+        id: rnd(),
+        control: 'ul',
+        value: ['列表一', '列表二', ['列表三', '列表四'], '列表五'],
+        config: {}
       }
     ]
   }),

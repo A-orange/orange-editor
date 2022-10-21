@@ -24,7 +24,7 @@
           <component
             v-for="layout in pageLayout"
             :key="layout.id"
-            :is="controlMap[layout.control]"
+            :is="widgetComponent[layout.control]"
             v-model:value="layout.value"
             :controlId="layout.id"
             v-bind="layout.config"
@@ -41,12 +41,7 @@ import {intersection} from 'lodash';
 import {useStore} from "vuex";
 
 import AutoComplete from "@/components/AutoComplete/AutoComplete.vue";
-
-import CodeEditorControl from "@/widget/CodeEditor/CodeEditor.vue";
-import TitleControl from "@/widget/title/Title.vue";
-import TodoControl from "@/widget/todo/Todo.vue";
-import TodoProControl from "@/widget/todo/TotoPro.vue";
-
+import {widgetComponent} from "@/widget";
 // 侧边栏展示隐藏
 import {keyDownCode, keyDownListener} from "@/event/keyEvent";
 import type {LayoutItem} from "@/store/page";
@@ -75,17 +70,10 @@ const breadcrumb = ref<Array<Breadcrumb>>([{path: '/', name: '工作台'}]);
 
 // 生成控件
 const createControl = ({control, config}: any) => {
-  viewLayout.value.push({key: Date.now(), component: CodeEditorControl, options: {language: config.codeType}})
+  viewLayout.value.push({key: Date.now(), component: widgetComponent.codeEditor, options: {language: config.codeType}})
 }
 
 const viewLayout = ref<any>([]);
-
-const controlMap = {
-  'title': TitleControl,
-  'codeEditor': CodeEditorControl,
-  'todo': TodoControl,
-  'todoPro': TodoProControl,
-}
 
 const store = useStore();
 const pageLayout = computed<Array<LayoutItem>>(() => store.state.page.layout)

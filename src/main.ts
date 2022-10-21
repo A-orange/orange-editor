@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 // 样式
-import "@/styles/normal.css"
+import "@/styles/normal.less"
 import "@/styles/dark.less"
 
 const app = createApp(App)

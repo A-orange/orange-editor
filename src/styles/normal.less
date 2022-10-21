@@ -77,3 +77,16 @@ input[type=date]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+div[contenteditable=true] {
+    user-modify: read-write-plaintext-only;
+
+    &:empty:before {
+        content: attr(data-placeholder);
+        color: rgb(110, 110, 110);
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+}
