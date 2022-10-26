@@ -172,8 +172,8 @@ export const page = {
         control: 'mindMap',
         chain: false,
         value: <Array<Edge>>[
-          {id: '1kip57', type: 'custom', label: '开始', position: {x: 100, y: 100}, dimensions: {width: 170, height: 35}, data: {type: 'default'}},
-          {id: '1kip58', type: 'custom', label: '结束', position: {x: 400, y: 100}, dimensions: {width: 110, height: 35}, data: {type: 'default'}},
+          {id: '1kip57', type: 'custom', label: '开始', position: {x: 100, y: 100}, data: {type: 'default', theme: '#ff79c6'}},
+          {id: '1kip58', type: 'custom', label: '结束', position: {x: 400, y: 100}, data: {type: 'default'}},
           {id: '1kip59', source: '1kip57', target: '1kip58', sourceHandle: 'right', targetHandle: 'left', style: {stroke: '#f00', strokeWidth: '2px'}},
         ],
         config: {}

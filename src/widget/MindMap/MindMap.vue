@@ -134,20 +134,25 @@
       </div>
       <template #node-custom="node">
         <div class="mind-node">
-          <div :class="['node-content', node.data?.type, {'node-active': node.selected}]">
+          <div
+            :class="['node-content', node.data?.type, {'node-active': node.selected}]"
+            :style="{
+              boxShadow: '0 0 0 2px ' + node.data?.theme
+            }"
+          >
             <div
               class="node-editor"
               contenteditable="true"
               @mousedown.stop
             >
-              {{ node.data }}
+              {{ node.label }}
             </div>
             <div
               v-for="handle in ['left', 'right']"
               :key="handle"
               :class="['node-handle', 'handle-' + handle]"
             >
-              <div class="shrink">
+              <div class="shrink" @click="shrinkNode(node, handle)">
                 <Icon :size="12" color="#333">
                   <svg>
                     <path
@@ -155,7 +160,7 @@
                   </svg>
                 </Icon>
               </div>
-              <div class="add-node">
+              <div class="add-node" @click="addNode(node,handle)">
                 <Icon :size="14" color="#2e9cfe">
                   <svg>
                     <path
@@ -175,14 +180,17 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {Handle, Position, useVueFlow} from "@vue-flow/core";
+import {nextTick, onMounted, ref} from "vue";
+import type {PropType} from "vue";
+import {Handle, Position, useVueFlow, getOutgoers} from "@vue-flow/core";
+import type {Node, GraphNode} from "@vue-flow/core";
 import {Background, MiniMap} from "@vue-flow/additional-components";
 import Icon from "@/components/Icon/Icon.vue"
+import {rnd} from "@/utils/string";
 
 const props = defineProps({
   value: {
-    type: Array,
+    type: Array as PropType<Array<Node>>,
     default: []
   },
   controlId: String
@@ -190,6 +198,9 @@ const props = defineProps({
 
 const vueFlowContent = ref<string>();
 const {
+  addNodes,
+  addEdges,
+  getNode,
   getTransform,
   setTransform,
   fitView,
@@ -235,6 +246,47 @@ const vueFlowControl = {
   },
   // 配置
   
+}
+
+// 收缩节点
+function shrinkNode(node:GraphNode , direction: string) {
+  
+}
+
+// 添加节点
+function addNode(node:GraphNode , direction: string) {
+  console.log(node, direction)
+  const {id: sourceId, position: {x, y}, dimensions: {width}} = node;
+  const targetId =  rnd();
+  console.log(getNode(node.id))
+  addNodes([
+    {
+      id: targetId,
+      type: 'custom',
+      label: '新添加',
+      position: {
+        x: direction === 'left' ? x - 100 - width : x + width + 100,
+        y: y
+      },
+      data: {
+        type: 'default'
+      }
+    }
+  ])
+  
+  nextTick(() => {
+    const connectId = rnd();
+    addEdges([
+      {
+        id: connectId,
+        source: sourceId,
+        target: targetId,
+        sourceHandle: direction,
+        targetHandle: direction === 'left' ? 'right': 'left',
+        style: {stroke: '#f00', strokeWidth: '2px'}
+      }
+    ])
+  })
 }
 
 
