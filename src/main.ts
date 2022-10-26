@@ -26,4 +26,13 @@ app.use(router);
 import {store} from "@/store";
 app.use(store);
 
+import clickOutside from "@/directives/click-outside";
+app.directive('clickOutside', clickOutside);
+
+// vueFlow
+import {VueFlow} from "@vue-flow/core";
+import '@vue-flow/core/dist/style.css';
+import "@vue-flow/core/dist/theme-default.css";
+app.component('VueFlow', VueFlow);
+
 app.mount('#app')

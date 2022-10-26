@@ -24,6 +24,7 @@
       data-placeholder="代办列表"
       v-html="task"
       @blur="changeTask($event)"
+      @keydown.delete="deleteControl($event)"
     ></div>
   </div>
 </template>
@@ -43,7 +44,7 @@ const props = defineProps({
   controlId: String
 })
 
-const emits = defineEmits(['update:value'])
+const emits = defineEmits(['update:value', 'delete'])
 
 const store = useStore();
 const changeTask = ({target}: any) => {
@@ -52,6 +53,12 @@ const changeTask = ({target}: any) => {
     key: 'task',
     value: target.innerText
   })
+}
+
+const deleteControl = (event: any) => {
+  if (!event.target.innerText) {
+    emits('delete');
+  }
 }
 </script>
 

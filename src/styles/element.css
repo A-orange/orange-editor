@@ -12477,14 +12477,14 @@ html.dark body {
 
 .el-slider {
     --el-slider-main-bg-color: var(--el-color-primary);
-    --el-slider-runway-bg-color: var(--el-border-color-light);
+    --el-slider-runway-bg-color: var(--el-text-color-regular);
     --el-slider-stop-bg-color: var(--el-color-white);
     --el-slider-disabled-color: var(--el-text-color-placeholder);
     --el-slider-border-radius: 3px;
     --el-slider-height: 6px;
-    --el-slider-button-size: 20px;
+    --el-slider-button-size: 14px;
     --el-slider-button-wrapper-size: 36px;
-    --el-slider-button-wrapper-offset: -15px
+    --el-slider-button-wrapper-offset-top: -15px;
 }
 
 .el-slider {
@@ -12558,7 +12558,7 @@ html.dark body {
     width: var(--el-slider-button-wrapper-size);
     position: absolute;
     z-index: 1;
-    top: var(--el-slider-button-wrapper-offset);
+    top: var(--el-slider-button-wrapper-offset-top);
     transform: translateX(-50%);
     background-color: transparent;
     text-align: center;
@@ -12609,7 +12609,7 @@ html.dark body {
 
 .el-slider__button.hover, .el-slider__button:hover {
     cursor: -webkit-grab;
-    cursor: grab
+    cursor: auto;
 }
 
 .el-slider__button.dragging {

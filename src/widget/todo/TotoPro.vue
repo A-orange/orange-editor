@@ -2,17 +2,15 @@
   <div :class="['orange-todo-control', {'orange-todo-control-finish': [2,3].includes(value)}]">
     <div class="orange-todo-icon" @click="changeState">
       <!-- 未开始 -->
-      <icon v-if="step === 0" color="#c2c2c2" :size="24" rule="evenodd">
+      <icon v-show="step === 0" color="#c2c2c2" :size="24" rule="evenodd" viewBox="0 0 24 24">
         <template v-slot>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 18.3a6.3 6.3 0 100-12.6 6.3 6.3 0 000 12.6zm0 1.2a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"></path>
-          </svg>
+          <svg fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 18.3a6.3 6.3 0 100-12.6 6.3 6.3 0 000 12.6zm0 1.2a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" fill="currentColor"></path></svg>
         </template>
       </icon>
       <!-- 进行中 -->
-      <icon v-if="step === 1" color="#c2c2c2" :size="24" rule="evenodd">
+      <icon v-show="step === 1" color="#c2c2c2" :size="24" rule="evenodd" viewBox="0 0 24 24">
         <template v-slot>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg >
             <path
               d="M9.5 12a1 1 0 11-2 0 1 1 0 012 0zM13 12a1 1 0 11-2 0 1 1 0 012 0zM15.5 13a1 1 0 100-2 1 1 0 000 2z"></path>
             <path
@@ -21,9 +19,9 @@
         </template>
       </icon>
       <!-- 完成 -->
-      <icon v-if="step === 2" color="#3a3a38" :size="24" rule="evenodd">
+      <icon v-show="step === 2" color="#3a3a38" :size="24" rule="evenodd" viewBox="0 0 24 24">
         <template v-slot>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg>
             <path
               d="M16.075 9.398a.7.7 0 00-1.15-.796l-3.977 5.743-1.91-2.293a.7.7 0 10-1.076.896l2.5 3a.7.7 0 001.113-.05l4.5-6.5z"></path>
             <path
@@ -32,9 +30,9 @@
         </template>
       </icon>
       <!-- 关闭 -->
-      <icon v-if="step === 3" color="#3a3a38" :size="24" rule="evenodd">
+      <icon v-show="step === 3" color="#3a3a38" :size="24" rule="evenodd" viewBox="0 0 24 24">
         <template v-slot>
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg>
             <path
               d="M15.182 8.818a.7.7 0 00-.99 0l-2.191 2.192-2.192-2.192a.7.7 0 10-.99.99L11.01 12l-2.192 2.192a.7.7 0 00.99.99l2.193-2.192 2.192 2.192a.7.7 0 00.99-.99L12.99 12l2.192-2.192a.7.7 0 000-.99z"></path>
             <path d="M12 19.5a7.5 7.5 0 100-15 7.5 7.5 0 000 15zm0-1.2a6.3 6.3 0 100-12.6 6.3 6.3 0 000 12.6z"></path>
@@ -48,6 +46,7 @@
       data-placeholder="代办列表"
       v-html="task"
       @blur="changeTask($event)"
+      @keydown.delete="deleteControl($event)"
     ></div>
   </div>
 </template>
@@ -68,7 +67,7 @@ const props = defineProps({
   controlId: String
 })
 
-const emits = defineEmits(['update:value', 'update:config'])
+const emits = defineEmits(['update:value', 'update:config', 'delete'])
 const store = useStore();
 
 const step = ref<number>(props.value);
@@ -95,6 +94,12 @@ const changeTask = ({target}: any) => {
     key: 'task',
     value: target.innerText
   })
+}
+
+const deleteControl = (event: any) => {
+  if (!event.target.innerText) {
+    emits('delete');
+  }
 }
 </script>
 

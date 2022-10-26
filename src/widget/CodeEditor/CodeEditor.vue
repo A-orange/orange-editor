@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineProps, reactive, ref, watch} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
 // @ts-ignore
 import {Prism} from "./prism.js";
@@ -258,7 +258,7 @@ export default defineComponent({
     min-width: 100%;
     padding: 30px 10px 25px;
     border-radius: 3px;
-    background-color: @orange-code-editor-bg-color;
+    background-color: fadeout(@orange-code-editor-bg-color, 80%);
     display: flex;
     gap: 20px;
     position: relative;

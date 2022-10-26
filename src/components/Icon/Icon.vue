@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, nextTick, ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 const props = defineProps({
   size: {
     type: Number,
@@ -18,6 +18,10 @@ const props = defineProps({
   rule: {
     type: String,
     default: 'nonzero'
+  },
+  viewBox: {
+    type: String,
+    default: '0 0 1024 1024'
   }
 })
 
@@ -42,10 +46,18 @@ const redraw = () => {
     svg.style.overflow = 'hidden';
     svg.style.fillRule = props.rule;
     svg.style.fill = props.color;
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.setAttribute('viewBox', props.viewBox);
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.orange-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>

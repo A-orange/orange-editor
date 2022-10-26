@@ -32,7 +32,7 @@
 
 <script lang="ts" setup>
 import type {PropType} from "vue";
-import {computed, defineEmits, defineProps, ref, watch} from "vue";
+import {computed, defineEmits, ref, watch} from "vue";
 
 type DropOptionItem = {
   key: string,

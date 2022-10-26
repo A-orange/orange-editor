@@ -7,11 +7,12 @@
     :style="{fontSize: titleFontSize[level].size}"
     @blur="updateValue($event)"
     @input="isEmpty = !!$event.target.innerText"
+    @keydown.delete="deleteControl($event)"
   ></div>
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 
 const props = defineProps({
   value: {
@@ -23,7 +24,7 @@ const props = defineProps({
     default: 1
   }
 })
-const emits = defineEmits(['update:value']);
+const emits = defineEmits(['update:value', 'delete']);
 
 const titleFontSize = {
   1: {
@@ -47,6 +48,12 @@ const isEmpty = ref(!!props.value);
 
 const updateValue = (event: any) => {
   emits('update:value', event.target.innerText);
+}
+
+const deleteControl = (event: any) => {
+  if (!event.target.innerText) {
+    emits('delete');
+  }
 }
 </script>
 

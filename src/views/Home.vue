@@ -21,14 +21,18 @@
         <el-main>
           <auto-complete @createControl="createControl"/>
           
-          <component
+          <template
             v-for="layout in pageLayout"
             :key="layout.id"
-            :is="widgetComponent[layout.control]"
-            v-model:value="layout.value"
-            :controlId="layout.id"
-            v-bind="layout.config"
-          />
+          >
+            <CustomWidget
+              v-if="!layout.chain"
+              v-model:value="layout.value"
+              :widget="layout.control"
+              :controlId="layout.id"
+              :config="layout.config"
+            />
+          </template>
         </el-main>
       </el-container>
     </el-container>
@@ -41,13 +45,14 @@ import {intersection} from 'lodash';
 import {useStore} from "vuex";
 
 import AutoComplete from "@/components/AutoComplete/AutoComplete.vue";
+import CustomWidget from "@/components/CustomWidget/CustomWidget.vue"
 import {widgetComponent} from "@/widget";
 // 侧边栏展示隐藏
 import {keyDownCode, keyDownListener} from "@/event/keyEvent";
 import type {LayoutItem} from "@/store/page";
 
 keyDownListener();
-const showAside = ref<boolean>(true);
+const showAside = ref<boolean>(false);
 watch(
   () => keyDownCode.value,
   (keyCode) => {
@@ -76,7 +81,8 @@ const createControl = ({control, config}: any) => {
 const viewLayout = ref<any>([]);
 
 const store = useStore();
-const pageLayout = computed<Array<LayoutItem>>(() => store.state.page.layout)
+const pageLayout = computed<Array<LayoutItem>>(() => store.state.page.layout);
+
 </script>
 
 <style lang="less" scoped>
@@ -106,7 +112,8 @@ const pageLayout = computed<Array<LayoutItem>>(() => store.state.page.layout)
       }
       
       > .el-main {
-        padding: 10px;
+        padding: 10px 50px;
+        
       }
     }
   }
