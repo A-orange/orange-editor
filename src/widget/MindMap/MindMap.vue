@@ -200,7 +200,7 @@ const vueFlowContent = ref<string>();
 const {
   addNodes,
   addEdges,
-  getNode,
+  getEdges,
   getTransform,
   setTransform,
   fitView,
@@ -258,7 +258,7 @@ function addNode(node:GraphNode , direction: string) {
   console.log(node, direction)
   const {id: sourceId, position: {x, y}, dimensions: {width}} = node;
   const targetId =  rnd();
-  console.log(getNode(node.id))
+  console.log(getEdges.value.filter(e => e.source === node.id).map(o => o.targetNode))
   addNodes([
     {
       id: targetId,
