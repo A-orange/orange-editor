@@ -8,6 +8,7 @@ import CollapseControl from "@/widget/collapse/Collapse.vue";
 import QuoteControl from "@/widget/quote/Quote.vue";
 import DividerControl from "@/widget/divider/Divider.vue";
 import MindMapControl from "@/widget/MindMap/MindMap.vue";
+import BookmarkControl from "@/widget/bookmark/Bookmark.vue";
 
 export const widgetComponent = {
   'title': TitleControl,
@@ -20,4 +21,5 @@ export const widgetComponent = {
   'quote': QuoteControl,
   'divider': DividerControl,
   'mindMap': MindMapControl,
+  'bookmark': BookmarkControl,
 }

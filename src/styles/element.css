@@ -9187,7 +9187,7 @@ html.dark body {
 }
 
 :root {
-    --el-loading-spinner-size: 42px;
+    --el-loading-spinner-size: 30px;
     --el-loading-fullscreen-spinner-size: 50px
 }
 
@@ -9257,7 +9257,7 @@ html.dark body {
     stroke-dasharray: 90, 150;
     stroke-dashoffset: 0;
     stroke-width: 2;
-    stroke: var(--el-color-primary);
+    stroke: #ff841f;
     stroke-linecap: round
 }
 
@@ -9972,7 +9972,7 @@ html.dark body {
     transform: translateX(-50%);
     background-color: var(--el-message-bg-color);
     transition: opacity var(--el-transition-duration), transform .4s, top .4s;
-    padding: var(--el-message-padding);
+    padding: 8px 10px;
     display: flex;
     align-items: center
 }
@@ -10016,6 +10016,7 @@ html.dark body {
 }
 
 .el-message .el-message-icon--info {
+    display: none;
     color: var(--el-message-text-color)
 }
 

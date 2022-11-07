@@ -10,5 +10,19 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    proxy: {
+      // "/iTab": {
+      //   target: 'https://api.codelife.cc',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/iTab/, '')
+      // },
+      "/woLai": {
+        target: 'https://api.wolai.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/woLai/, '')
+      },
+    }
   }
 })

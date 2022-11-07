@@ -5,7 +5,7 @@
       ref="inputRef"
       v-model="inputValue"
       placeholder="键入文字或 '/' 选择"
-      @keydown.enter="createTextControl"
+      @keyup.enter="createTextControl"
     />
     <el-autocomplete
       v-else
@@ -27,13 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, ref, watch} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import type {ControlItem} from './controls';
-import {controls} from "./controls";
+import {controls, simpleTextWidget} from "./controls";
+import {forEach} from "@/utils/array";
 
 const emit = defineEmits(['createControl'])
 
-const inputRef = ref<HTMLElement>();
+const inputRef = ref();
 const autoCompleteRef = ref<HTMLElement>();
 const inputValue = ref<string>('');
 
@@ -91,10 +92,12 @@ const createControlConfig = (control: ControlItem) => {
   switch (type) {
     case 'code': {
       config['codeType'] = inputValue.value.trim().slice(3);
-    }break;
+    }
+      break;
     case 'ol': {
-      config['startWidth'] = inputValue.value.trim().slice(0,-1);
-    }break;
+      config['startWidth'] = inputValue.value.trim().slice(0, -1);
+    }
+      break;
     default: {
       config['text'] = inputValue.value;
     }
@@ -103,13 +106,97 @@ const createControlConfig = (control: ControlItem) => {
 }
 
 
-// 普通输入 创建 文本控件
-const createTextControl = () => {
-  emit('createControl', {
-    control: controls[0],
-    config: {
-      text: inputValue.value
+onMounted(() => {
+  inputRef.value?.$el.addEventListener('paste', (ev: any) => {
+    return pasteCreateControl(ev.clipboardData)
+    /*const htmlStr = ev.clipboardData.getData('text/html');
+    const dom = new DOMParser().parseFromString(htmlStr, 'text/html');
+    const table = dom.querySelector('table');
+    if (table) {
+      table.style.color = '#000';
+      clearDefaultStyle(table);
+      console.log((table.parentNode as HTMLElement).innerHTML)
+      document.body.append(table);
+    }*/
+  });
+})
+
+// 复制粘贴 创建控件
+const pasteCreateControl = (clipboardData: any) => {
+  const {kind, type} = clipboardData.items[0] || {};
+  console.log({kind, type})
+  if (kind === 'file') {
+    switch (type) {
+      case 'image/png': {
+        console.log('图片')
+      }
+        break;
     }
+  }
+  
+  if (kind === 'string') {
+    const string = clipboardData.getData(type);
+    // console.log(string)
+    switch (type) {
+      case 'text/plain': {
+        forEach(simpleTextWidget, (config: any, widget: any) => {
+          if (new RegExp(config.regExp).test(string)) {
+            simpleTextWidget[widget].config(string).then((urlData: any) => {
+              emit('createControl', {
+                control: 'bookmark',
+                config: urlData
+              })
+            })
+            return false;
+          }
+        }).finally(() => {
+          // 普通文本
+          emit('createControl', {
+            control: controls[0],
+            config: {
+              text: inputValue.value
+            }
+          })
+        })
+      }
+        break;
+      case 'text/link-preview': {
+        simpleTextWidget.bookmark.config(
+          JSON.parse(string)
+        ).then((urlData: any) => {
+          console.log(urlData)
+          emit('createControl', {
+            control: 'bookmark',
+            config: urlData
+          })
+        })
+      }
+        break;
+    }
+  }
+}
+
+// 输入普通文本 创建 控件
+const createTextControl = () => {
+  const string = inputValue.value;
+  forEach(simpleTextWidget, (config: any, widget: any) => {
+    if (new RegExp(config.regExp).test(string)) {
+      simpleTextWidget[widget].config(string).then((urlData: any) => {
+        emit('createControl', {
+          control: 'bookmark',
+          config: urlData
+        })
+      })
+      return false;
+    }
+  }).finally(() => {
+    // 普通文本
+    emit('createControl', {
+      control: controls[0],
+      config: {
+        text: inputValue.value
+      }
+    })
   })
 }
 
@@ -126,6 +213,39 @@ watch(
     })
   }
 )
+
+
+// 递归节点 清空 原始样式
+const clearDefaultStyle = (dom: HTMLElement) => {
+  switch (dom.nodeName) {
+    case '#text':
+      break;
+    case 'TD': {
+      (dom as HTMLElement).style.border = '';
+      (dom as HTMLElement).style.padding = '';
+      (dom as HTMLElement).style.height = '';
+    }
+      break;
+    case 'TABLE':
+    case 'TR':
+    case 'TBODY': {
+      (dom as HTMLElement).style.height = '';
+    }
+      break;
+    case 'INS':
+    case 'B':
+    case 'P':
+    // case 'O:P':
+    case 'SPAN': {
+      (dom as HTMLElement).style.color = '#000';
+    }
+      break;
+    default:
+      console.log(dom, dom.nodeName)
+      dom.remove();
+  }
+  dom.childNodes.forEach(node => clearDefaultStyle(node as HTMLElement))
+}
 </script>
 
 <script lang="ts">
