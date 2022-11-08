@@ -1,5 +1,3 @@
-import {getUrlData} from "@/api/request";
-
 export type ControlItem = {
   type: string,
   icon: string,
@@ -28,21 +26,9 @@ export const simpleTextWidget: Record<string, any> = {};
 // 网址书签
 const bookmark = {
   regExp: '(http|ftp|https)://[\\w\\-_]+(\\.[\\w\\-_]+)?',
-  config: (data: any) => {
-    const {url, title} = (typeof data === 'string' ? {url: data, title: ''}: data) || {};
-    return new Promise((resolve, reject) => {
-      const urlData:any = {title, url, description: '', icon: '', images: []};
-      getUrlData({url}).then(res => {
-        const {links: {icon} = {icon: {}}, meta} = res.data || {};
-        urlData.title = meta.title || urlData.title;
-        urlData.url = meta.canonical || urlData.url;
-        urlData.description = meta.description;
-        if (Array.isArray(icon) && icon.length) {
-          urlData.icon = icon.splice(0, 1)[0].href;
-          urlData.images = icon.map(o => o.href);
-        }
-        resolve(urlData);
-      }).catch(() => reject());
+  createConfig: (data: DataTransfer | string) => {
+    return new Promise(resolve => {
+      return {};
     })
   }
 };

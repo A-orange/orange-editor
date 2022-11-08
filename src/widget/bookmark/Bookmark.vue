@@ -2,7 +2,7 @@
   <div
       class="orange-bookmark-control"
       v-loading="urlData.loading"
-      element-loading-background="rgba(122, 122, 122, 0.8)"
+      element-loading-background="rgba(122, 122, 122, 0.4)"
       :style="{borderColor: urlData.theme}"
   >
     <div class="orange-bookmark-text">
@@ -67,6 +67,7 @@ const props = defineProps({
     }
   }
 })
+const emits = defineEmits(['update:value']);
 
 // 网址数据
 const urlData = reactive({
@@ -82,8 +83,13 @@ const urlData = reactive({
 
 // 获取网址数据
 const getUrlInformation = (url: string) => {
+  urlData.loading = true;
   getUrlData({url}).then((res: any) => {
-    const {links: {icon} = {icon: {}}, meta} = res.data || {};
+    urlData.loading = false;
+    const {
+      links: {icon} = {icon: {}},
+      meta
+    } = res.data || {};
     urlData.title = meta.title || props.config.title;
     urlData.url = meta.canonical || props.value;
     urlData.theme = meta['theme-color'];
@@ -92,7 +98,7 @@ const getUrlInformation = (url: string) => {
       urlData.icon = icon.splice(0, 1)[0].href;
       urlData.images = icon.map(o => o.href);
     }
-  })
+  }).catch(() => urlData.loading = false);
 }
 
 watch(

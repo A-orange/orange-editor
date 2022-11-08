@@ -107,8 +107,8 @@ const createControlConfig = (control: ControlItem) => {
 
 
 onMounted(() => {
-  inputRef.value?.$el.addEventListener('paste', (ev: any) => {
-    return pasteCreateControl(ev.clipboardData)
+  inputRef.value?.$el.addEventListener('paste', (ev: ClipboardEvent) => {
+    return pasteCreateControl(ev.clipboardData!);
     /*const htmlStr = ev.clipboardData.getData('text/html');
     const dom = new DOMParser().parseFromString(htmlStr, 'text/html');
     const table = dom.querySelector('table');
@@ -122,7 +122,7 @@ onMounted(() => {
 })
 
 // 复制粘贴 创建控件
-const pasteCreateControl = (clipboardData: any) => {
+const pasteCreateControl = (clipboardData: DataTransfer) => {
   const {kind, type} = clipboardData.items[0] || {};
   console.log({kind, type})
   if (kind === 'file') {
@@ -135,44 +135,28 @@ const pasteCreateControl = (clipboardData: any) => {
   }
   
   if (kind === 'string') {
-    const string = clipboardData.getData(type);
-    // console.log(string)
-    switch (type) {
-      case 'text/plain': {
-        forEach(simpleTextWidget, (config: any, widget: any) => {
-          if (new RegExp(config.regExp).test(string)) {
-            simpleTextWidget[widget].config(string).then((urlData: any) => {
-              emit('createControl', {
-                control: 'bookmark',
-                config: urlData
-              })
-            })
-            return false;
-          }
-        }).finally(() => {
-          // 普通文本
-          emit('createControl', {
-            control: controls[0],
-            config: {
-              text: inputValue.value
-            }
-          })
-        })
-      }
-        break;
-      case 'text/link-preview': {
-        simpleTextWidget.bookmark.config(
-          JSON.parse(string)
-        ).then((urlData: any) => {
-          console.log(urlData)
+    const string = clipboardData.getData('text/plain');
+    console.log(string)
+    forEach(simpleTextWidget, (config: any, widget: any) => {
+      if (new RegExp(config.regExp).test(string)) {
+        simpleTextWidget[widget].createConfig(clipboardData).then((urlData: any) => {
           emit('createControl', {
             control: 'bookmark',
+            value: string,
             config: urlData
           })
         })
+        return false;
       }
-        break;
-    }
+    }).finally(() => {
+      // 普通文本
+      emit('createControl', {
+        control: controls[0],
+        config: {
+          text: inputValue.value
+        }
+      })
+    })
   }
 }
 
@@ -181,7 +165,7 @@ const createTextControl = () => {
   const string = inputValue.value;
   forEach(simpleTextWidget, (config: any, widget: any) => {
     if (new RegExp(config.regExp).test(string)) {
-      simpleTextWidget[widget].config(string).then((urlData: any) => {
+      simpleTextWidget[widget].createConfig(string).then((urlData: any) => {
         emit('createControl', {
           control: 'bookmark',
           config: urlData

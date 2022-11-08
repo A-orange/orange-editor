@@ -74,8 +74,13 @@ type Breadcrumb = {
 const breadcrumb = ref<Array<Breadcrumb>>([{path: '/', name: '工作台'}]);
 
 // 生成控件
-const createControl = ({control, config}: any) => {
-  viewLayout.value.push({key: Date.now(), component: widgetComponent.codeEditor, options: {language: config.codeType}})
+const createControl = ({control, value, config}: any) => {
+  viewLayout.value.push({
+    key: Date.now(),
+    control: control,
+    value: value,
+    config: {language: config.codeType}
+  })
 }
 
 const viewLayout = ref<any>([]);

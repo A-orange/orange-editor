@@ -151,7 +151,7 @@ export const page = {
         }
       },*/
       // 引述
-      {
+      /*{
         id: rnd(),
         control: 'quote',
         chain: false,
@@ -165,7 +165,7 @@ export const page = {
         chain: false,
         value: '分割线',
         config: {}
-      },
+      },*/
       //思维导图
       /*{
         id: rnd(),

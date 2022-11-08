@@ -52,7 +52,7 @@
 
 <script lang="ts" setup>
 import type {PropType} from "vue";
-import {computed, defineEmits} from "vue";
+import {computed} from "vue";
 import {useStore} from "vuex";
 
 import {typeOf} from "@/utils/object";
